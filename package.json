@@ -1,0 +1,19 @@
+{
+  "name": "node-simple-api-test",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "mocha"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "chai": "^4.2.0",
+    "chai-json-schema": "^1.5.1",
+    "faker": "^4.1.0",
+    "mocha": "^6.2.2",
+    "supertest": "^4.0.2"
+  }
+}
