@@ -10,11 +10,13 @@ const api = chai.request('http://localhost:3000/')
 
 chai.use(require('chai-json-schema'));
 
-describe('Update Prodile Test', function() {
+describe('Update Profile Test', function() {
 
     describe('Succes Update Profile', function() {
         
         let response = {}
+
+        const jsonSchema = require('./schema/03_update_profile_schema.json')
 
         before(done => {
             api.put('profile')
@@ -38,6 +40,11 @@ describe('Update Prodile Test', function() {
         it('Response data match with request data', function (done) {
             expect(response.body.data.name).to.equals('New ' + global.name);
             done()
+        })
+
+        it('Valid JSON Schema', function (done) {
+            expect(response.body).to.be.jsonSchema(jsonSchema);
+            done();
         })
     })
 })

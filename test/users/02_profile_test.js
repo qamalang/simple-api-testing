@@ -12,25 +12,7 @@ describe('Profile Test', function() {
 
     describe('Success get profile', function() {
 
-        const jsonSchema = {
-            "type": "object",
-            "required": [
-                "success",
-                "message",
-                "data"
-            ],
-            "properties":{
-                "success": {
-                    "type": "boolean"
-                },
-                "message": {
-                    "type": "string"
-                },
-                "data": {
-                    "type": "object"
-                }
-            }
-        }
+        const jsonSchema = require('./schema/02_profile_schema.json')
 
         before(done => {
             api.get('profile')
@@ -51,10 +33,34 @@ describe('Profile Test', function() {
             done()
         })
 
-        // it('Valid JSON Schema', function (done) {
-        //     expect(response.body).to.be.jsonSchema(jsonSchema);
-        //     done();
-        // })
+        it('Valid JSON Schema', function (done) {
+            expect(response.body).to.be.jsonSchema(jsonSchema);
+            done();
+        })
+    })
+
+    describe('Failed get profile using invalid token', function() {
+
+        const jsonSchema = require('./schema/02_profile_schema.json')
+
+        before(done => {
+            api.get('profile')
+                .set('token', global.token+ "invalid token")
+                .end(function (err, res) {
+                    response = res;
+                    done();
+                });
+        });
+        
+        it('Response Code Must Be 401 Unauthorized', function (done) {
+            expect(response.status).to.equals(401);
+            done()
+        })
+
+        it('Valid JSON Schema', function (done) {
+            expect(response.body).to.not.be.jsonSchema(jsonSchema);
+            done();
+        })
     })
 })
 

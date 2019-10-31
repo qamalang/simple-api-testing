@@ -11,31 +11,14 @@ const api = chai.request('http://localhost:3000/')
 chai.use(require('chai-json-schema'));
 
 describe('Registration Test', function() {
+    let username = faker.internet.userName();
+    let name = faker.name.findName();
 
     describe('Success Registration', function() {
-        let username = faker.internet.userName();
-        let name = faker.name.findName();
+        
         let response = {}
 
-        const jsonSchema = {
-            "type": "object",
-            "required": [
-                "success",
-                "message",
-                "data"
-            ],
-            "properties":{
-                "success": {
-                    "type": "boolean"
-                },
-                "message": {
-                    "type": "string"
-                },
-                "data": {
-                    "type": "object"
-                }
-            }
-        }
+        const jsonSchema = require('./schema/01_register_schema.json')
 
         before(done => {
             api.post('register')
@@ -74,20 +57,25 @@ describe('Registration Test', function() {
         })
     })
 
-    // it('Failed registration', function (done) {
-    //     api.post('register')
-    //     .set('Content-Type', 'application/json')
-    //     .send({
-    //         name: "John Doe",
-    //         username: "",
-    //         password: ""
-    //     })
-    //     .end(function (err, res) {
-    //         expect(res.status).to.equals(422);
-
-
-    //         done();
-    //     });
-    // })
+    describe('Failed Registration Using Existing username', function() {
+        before(done => {
+            api.post('register')
+                .set('Content-Type', 'application/json')
+                .send({
+                    name: name,
+                    username: username,
+                    password: "password"
+                })
+                .end(function (err, res) {
+                    response = res;
+                    done();
+                });
+        });
+        
+        it('Response Code Must Be 422 Unprocessable Entity', function (done) {
+            expect(response.status).to.equals(422);
+            done()
+        })
+    })
 })
 
