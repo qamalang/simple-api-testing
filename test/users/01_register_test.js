@@ -1,14 +1,13 @@
-const chai = require('chai')
-const expect = require('chai').expect
-const chaiHttp = require("chai-http")
-const fs = require("fs")
-const faker = require("faker")
+const chai = require('chai');
+const expect = require('chai').expect;
+const chaiHttp = require("chai-http");
+const faker = require("faker");
+const chaiJsonSchema = require("chai-json-schema");
 
 chai.use(chaiHttp);
+chai.use(chaiJsonSchema);
 
 const api = chai.request('http://localhost:3000/')
-
-chai.use(require('chai-json-schema'));
 
 describe('Registration Test', function() {
     let username = faker.internet.userName();
@@ -16,9 +15,8 @@ describe('Registration Test', function() {
 
     describe('Success Registration', function() {
         
-        let response = {}
-
-        const jsonSchema = require('./schema/01_register_schema.json')
+        let response = {};
+        const jsonSchema = require('./schema/01_register_schema.json');
 
         before(done => {
             api.post('register')
@@ -36,26 +34,26 @@ describe('Registration Test', function() {
         
         it('Response Code Must Be 200 OK', function (done) {
             expect(response.status).to.equals(200);
-            done()
-        })
+            done();
+        });
 
         it('Response data match with request data', function (done) {
             expect(response.body.data.name).to.equals(name);
             expect(response.body.data.username).to.equals(username);
-            done()
-        })
+            done();
+        });
 
         it('Valid JSON Schema', function (done) {
             expect(response.body).to.be.jsonSchema(jsonSchema);
             done();
-        })
+        });
 
         after(done =>{
-            global.token = response.body.data.token
-            global.name = name
+            global.token = response.body.data.token;
+            global.name = name;
             done();
-        })
-    })
+        });
+    });
 
     describe('Failed Registration Using Existing username', function() {
         before(done => {
@@ -74,8 +72,7 @@ describe('Registration Test', function() {
         
         it('Response Code Must Be 422 Unprocessable Entity', function (done) {
             expect(response.status).to.equals(422);
-            done()
-        })
-    })
-})
-
+            done();
+        });
+    });
+});

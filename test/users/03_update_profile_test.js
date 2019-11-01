@@ -1,21 +1,18 @@
-const chai = require('chai')
-const expect = require('chai').expect
-const chaiHttp = require("chai-http")
-const fs = require("fs")
-const faker = require("faker")
+const chai = require('chai');
+const expect = require('chai').expect;
+const chaiHttp = require("chai-http");
+const fs = require("fs");
+const chaiJsonSchema = require("chai-json-schema");
 
 chai.use(chaiHttp);
+chai.use(chaiJsonSchema);
 
-const api = chai.request('http://localhost:3000/')
-
-chai.use(require('chai-json-schema'));
+const api = chai.request('http://localhost:3000/');
 
 describe('Update Profile Test', function() {
-
     describe('Succes Update Profile', function() {
         
-        let response = {}
-
+        let response = {};
         const jsonSchema = require('./schema/03_update_profile_schema.json')
 
         before(done => {
@@ -34,18 +31,17 @@ describe('Update Profile Test', function() {
 
         it('Response Code Must Be 200 OK', function (done) {
             expect(response.status).to.equals(200);
-            done()
-        })
+            done();
+        });
 
         it('Response data match with request data', function (done) {
             expect(response.body.data.name).to.equals('New ' + global.name);
-            done()
-        })
+            done();
+        });
 
         it('Valid JSON Schema', function (done) {
             expect(response.body).to.be.jsonSchema(jsonSchema);
             done();
-        })
-    })
-})
-
+        });
+    });
+});
